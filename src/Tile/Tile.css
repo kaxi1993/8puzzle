@@ -1,0 +1,19 @@
+.tile {
+    margin: 1px;
+    width: 100px;
+    height: 100px;
+    font-size: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid;
+    font-weight: bold;
+    border-radius: 30px;
+    user-select: none;
+    background-color: #ffffff;
+}
+
+.tile--empty {
+    border: 1px solid #dddddd;
+    background-color: #dddddd;
+}

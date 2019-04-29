@@ -1,0 +1,9 @@
+.board {
+    display: flex;
+    flex-wrap: wrap;
+    width: 312px;
+    height: 312px;
+    border: 2px solid black;
+    position: relative;
+    background-color: #dddddd;
+}
