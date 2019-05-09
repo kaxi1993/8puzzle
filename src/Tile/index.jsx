@@ -1,28 +1,19 @@
-import React, { Component } from 'react'
+import React from 'react'
 
 import './Tile.css'
 
-class Tile extends Component {
-    constructor (props) {
-        super(props)
+function Tile (props) {
+    const { number } = props
 
-        this.state = {
-        }
+    if (number === 0) {
+        return <div className="tile tile--empty"></div>
     }
 
-    render () {
-        const {number} = this.props
-
-        if (number === 0) {
-            return <div className="tile tile--empty"></div>
-        }
-
-        return (
-            <div className="tile">
-                {this.props.number}
-            </div>
-        )
-    }
+    return (
+        <div className="tile">
+            {number}
+        </div>
+    )
 }
 
 export default Tile
