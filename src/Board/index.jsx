@@ -15,8 +15,7 @@ class Board extends Component {
     }
 
     componentDidMount () {
-        const start = [1, 5, 8, 0, 7, 3, 6, 4, 2]
-        // const start = _.shuffle(this.state.numbers)
+        const start = this.shuffle(this.state.numbers)
         const goal = [1, 2, 3, 4, 5, 6, 7, 8, 0]
 
         this.setState({
@@ -28,9 +27,34 @@ class Board extends Component {
         }, 1000)
     }
 
+    shuffle (numbers) {
+        let shuffledNumbers = _.shuffle(numbers)
+
+        while (!this.isSolvable(shuffledNumbers)) {
+            shuffledNumbers = _.shuffle(numbers)
+        }
+
+        return shuffledNumbers
+    }
+
+    isSolvable (numbers) {
+        let count = 0
+
+        for (let i = 0; i < 8; i++) {
+            for (let j = i + 1; j <= 8; j++) {
+                if (numbers[i] && numbers[j] && numbers[i] > numbers[j]) {
+                    count++
+                }
+            }
+        }
+
+        return count % 2 === 0
+    }
+
     aStar (start, goal) {
-        let openSet = [start]
         const closedSet = []
+
+        const openSet = [start]
 
         const gScores = {}
         const fScores = {}
@@ -42,9 +66,9 @@ class Board extends Component {
 
         let count = 0
 
-        while (openSet.length > 0 && ++count < 5000) {
+        while (openSet.length > 0) {
             const current = this.getLowestFscore(openSet, fScores)
-            console.log('current', current, count)
+            console.log(++count, openSet.length, closedSet.length)
 
             if (this.isEqual(current, goal)) {
                 const fullPath = _.reverse(this.reconstructPath(cameFrom, current))
@@ -55,7 +79,7 @@ class Board extends Component {
             }
 
             // remove current position from open set
-            openSet = this.remove(openSet, current)
+            _.remove(openSet, (position) => this.isEqual(position, current))
 
             // add current position to closed set
             closedSet.push(current)
@@ -111,11 +135,7 @@ class Board extends Component {
     }
 
     isEqual (current, goal) {
-        return JSON.stringify(current) === JSON.stringify(goal)
-    }
-
-    remove (openSet, current) {
-        return openSet.filter(position => !this.isEqual(position, current))
+        return current.toString() === goal.toString()
     }
 
     getNeighbors (current) {
