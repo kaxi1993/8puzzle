@@ -3,6 +3,8 @@ import _ from 'lodash'
 
 import Tile from '../Tile'
 
+import startPositions from './positions'
+
 import './Board.css'
 
 class Board extends Component {
@@ -15,16 +17,15 @@ class Board extends Component {
     }
 
     componentDidMount () {
-        const start = this.shuffle(this.state.numbers)
+        // const start = this.shuffle(this.state.numbers)
+        const start = _.sample(startPositions)
         const goal = [1, 2, 3, 4, 5, 6, 7, 8, 0]
 
         this.setState({
             numbers: start
         })
 
-        setTimeout(() => {
-            this.aStar(start, goal)
-        }, 1000)
+        this.aStar(start, goal)
     }
 
     shuffle (numbers) {
@@ -64,11 +65,8 @@ class Board extends Component {
 
         const cameFrom = {}
 
-        let count = 0
-
         while (openSet.length > 0) {
             const current = this.getLowestFscore(openSet, fScores)
-            console.log(++count, openSet.length, closedSet.length)
 
             if (this.isEqual(current, goal)) {
                 const fullPath = _.reverse(this.reconstructPath(cameFrom, current))
