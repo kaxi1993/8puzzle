@@ -1,3 +1,4 @@
 # 8 Puzzle
 
-**8 Puzzle** problem solver using A* algorithm
+Solving **8 Puzzle** problem using A* algorithm
+
