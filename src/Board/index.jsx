@@ -3,6 +3,7 @@ import _ from 'lodash'
 
 import Tile from '../Tile'
 
+// import predefined 8 puzzle positions, which takes small time to resolve 
 import startPositions from './positions'
 
 import './Board.css'
@@ -17,20 +18,29 @@ class Board extends Component {
     }
 
     componentDidMount () {
-        // const start = this.shuffle(this.state.numbers)
-        const start = _.sample(startPositions)
+        // const start = this.shuffle(this.state.numbers) // uncomment this line and comment line below, if you want to use starting position randomly
+        const start = _.sample(startPositions) // take starting position from predefined positions
         const goal = [1, 2, 3, 4, 5, 6, 7, 8, 0]
 
         this.setState({
             numbers: start
         })
 
-        this.aStar(start, goal)
+        const fullPath = this.aStar(start, goal)
+
+        this.draw(fullPath)
     }
 
+    /**
+     * Shuffle numbers
+     * 
+     * @param {[Number]} numbers from 0 to 8 
+     * @returns {[Number]} in random order
+     */
     shuffle (numbers) {
         let shuffledNumbers = _.shuffle(numbers)
 
+        // shuffle numbers until their position is solvable
         while (!this.isSolvable(shuffledNumbers)) {
             shuffledNumbers = _.shuffle(numbers)
         }
@@ -38,6 +48,12 @@ class Board extends Component {
         return shuffledNumbers
     }
 
+    /**
+     * Check if numbers position is solvable
+     * 
+     * @param {[Number]} numbers shuffled numbers
+     * @returns {Boolean}
+     */
     isSolvable (numbers) {
         let count = 0
 
@@ -52,13 +68,21 @@ class Board extends Component {
         return count % 2 === 0
     }
 
+    /**
+     * A* algorithm implementation, returns full path
+     * from starting position to goal position
+     * 
+     * @param {[Number]} start position of numbers
+     * @param {[Number]} goal position of numbers
+     * @returns {[[Number]]} array of numbers array
+     */
     aStar (start, goal) {
         const closedSet = []
 
         const openSet = [start]
 
-        const gScores = {}
         const fScores = {}
+        const gScores = {}
 
         gScores[start] = 0
         fScores[start] = this.getHeuristic(start, goal)
@@ -69,11 +93,9 @@ class Board extends Component {
             const current = this.getLowestFscore(openSet, fScores)
 
             if (this.isEqual(current, goal)) {
-                const fullPath = _.reverse(this.reconstructPath(cameFrom, current))
+                const fullPath = this.reconstructPath(cameFrom, current)
 
-                this.draw(fullPath)
-
-                return true
+                return fullPath
             }
 
             // remove current position from open set
@@ -89,7 +111,7 @@ class Board extends Component {
                     continue
                 }
 
-                const tentativeGscore = gScores[current] + 1 // dist_between(current, neighbor) is one
+                const tentativeGscore = gScores[current] + 1 // dist between current and neighbor is one
 
                 if (!this.isInSet(openSet, neighbor)) {
                     openSet.push(neighbor)
@@ -104,20 +126,13 @@ class Board extends Component {
         }
     }
 
-    draw (fullPath, i = 0) {
-        if (i >= fullPath.length) {
-            return
-        }
-
-        this.setState({
-            numbers: fullPath[i]
-        })
-
-        setTimeout(() => {
-            this.draw(fullPath, ++i)
-        }, 1000)
-    }
-
+    /**
+     * Get position with lowest fScore
+     * 
+     * @param {[[Number]]} openSet array of open positions 
+     * @param {[Number]} fScores array of fscores
+     * @returns {[Number]}
+     */
     getLowestFscore (openSet, fScores) {
         let minFscore = openSet[0]
         let minScore = fScores[minFscore]
@@ -132,10 +147,23 @@ class Board extends Component {
         return JSON.parse("[" + minFscore + "]")
     }
 
+    /**
+     * Compare if two positions are equal
+     * 
+     * @param {[Number]} current position of numbers
+     * @param {[Number]} goal position of numbers
+     * @returns {Boolean}
+     */
     isEqual (current, goal) {
         return current.toString() === goal.toString()
     }
 
+    /**
+     * Get neighbor positions of current position
+     * 
+     * @param {[Number]} current position of numbers
+     * @returns {[[Number]]} 
+     */
     getNeighbors (current) {
         const positions = []
         const idx = current.findIndex(item => item === 0)
@@ -182,10 +210,24 @@ class Board extends Component {
         return positions
     }
 
+    /**
+     * Check if position is in set(open or closed) already
+     * 
+     * @param {[[Number]]} set array of numbers position
+     * @param {[Number]} neighbor position of numbers
+     * @returns {Boolean}
+     */
     isInSet (set, neighbor) {
         return !!set.find(position => this.isEqual(position, neighbor))
     }
 
+    /**
+     * Get heuristic cost
+     * 
+     * @param {[Number]} current position of numbers
+     * @param {[Number]} goal position of numbers
+     * @returns {Number}
+     */
     getHeuristic (current, goal) {
         let count = 0
 
@@ -198,6 +240,13 @@ class Board extends Component {
         return count
     }
 
+    /**
+     * Get successfull path from full path covered
+     * 
+     * @param {Object} cameFrom full path covered
+     * @param {[Number]} current goal position
+     * @returns {[[Number]]}
+     */
     reconstructPath (cameFrom, current) {
         const totalPath = [current]
 
@@ -207,7 +256,28 @@ class Board extends Component {
             totalPath.push(current)
         }
 
-        return totalPath
+        return _.reverse(totalPath)
+    }
+
+    /**
+     * Draw iteration from start to goal position
+     * wait 700 ms at each step and then draw next position
+     * 
+     * @param {[[Number]]} fullPath array of numbers
+     * @param {Number} i iteration count
+     */
+    draw (fullPath, i = 0) {
+        if (i >= fullPath.length) {
+            return
+        }
+
+        this.setState({
+            numbers: fullPath[i]
+        })
+
+        setTimeout(() => {
+            this.draw(fullPath, ++i)
+        }, 700)
     }
 
     render () {
