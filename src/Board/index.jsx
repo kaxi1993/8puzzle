@@ -4,7 +4,7 @@ import _ from 'lodash'
 import Tile from '../Tile'
 
 // import predefined 8 puzzle positions, which takes small time to resolve 
-import startPositions from './positions'
+import startingPositions from './positions'
 
 import './Board.css'
 
@@ -19,7 +19,7 @@ class Board extends Component {
 
     componentDidMount () {
         // const start = this.shuffle(this.state.numbers) // uncomment this line and comment line below, if you want to use starting position randomly
-        const start = _.sample(startPositions) // take starting position from predefined positions
+        const start = _.sample(startingPositions) // take starting position from predefined positions
         const goal = [1, 2, 3, 4, 5, 6, 7, 8, 0]
 
         this.setState({
