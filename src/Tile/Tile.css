@@ -2,14 +2,14 @@
     margin: 1px;
     width: 100px;
     height: 100px;
-    font-size: 40px;
     display: flex;
+    font-size: 40px;
+    font-weight: bold;
     align-items: center;
     justify-content: center;
-    border: 1px solid;
-    font-weight: bold;
-    border-radius: 30px;
     user-select: none;
+    border: 1px solid;
+    border-radius: 30px;
     background-color: #ffffff;
 }
 
