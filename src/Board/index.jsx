@@ -3,7 +3,7 @@ import _ from 'lodash'
 
 import Tile from '../Tile'
 
-// import predefined 8 puzzle positions, which takes small time to resolve 
+// import predefined positions, which takes small time to resolve 
 import startingPositions from './positions'
 
 import './Board.css'
@@ -166,45 +166,42 @@ class Board extends Component {
      */
     getNeighbors (current) {
         const positions = []
-        const idx = current.findIndex(item => item === 0)
+        const ind = current.findIndex(item => item === 0)
 
-        const emptyChunkIndex = Math.floor(idx / 3)
-        const emptyIndex = idx - emptyChunkIndex * 3
+        if (ind >= 3) {
+            const topNeighbour = [...current]
 
-        if (idx - 3 >= 0) {
-            const newNumbers = [...current]
+            topNeighbour[ind - 3] = current[ind]
+            topNeighbour[ind] = current[ind - 3]
 
-            newNumbers[idx] = current[idx - 3]
-            newNumbers[idx - 3] = 0
-
-            positions.push([...newNumbers])
+            positions.push(topNeighbour)
         }
 
-        if (idx + 3 <= 8) {
-            const newNumbers = [...current]
+        if (ind <= 5) {
+            const bottomNeighbour = [...current]
 
-            newNumbers[idx] = current[idx + 3]
-            newNumbers[idx + 3] = 0
+            bottomNeighbour[ind + 3] = current[ind]
+            bottomNeighbour[ind] = current[ind + 3]
 
-            positions.push([...newNumbers])
+            positions.push(bottomNeighbour)
         }
 
-        if (emptyIndex - 1 >= 0) {
-            const newNumbers = [...current]
+        if (![0, 3, 6].includes(ind)) {
+            const leftNeighbour = [...current]
 
-            newNumbers[idx] = current[idx - 1]
-            newNumbers[idx - 1] = 0
+            leftNeighbour[ind - 1] = current[ind]
+            leftNeighbour[ind] = current[ind - 1]
 
-            positions.push([...newNumbers])
+            positions.push(leftNeighbour)
         }
 
-        if (emptyIndex + 1 <= 2) {
-            const newNumbers = [...current]
+        if (![2, 5, 8].includes(ind)) {
+            const rightNeighbour = [...current]
 
-            newNumbers[idx] = current[idx + 1]
-            newNumbers[idx + 1] = 0
+            rightNeighbour[ind + 1] = current[ind]
+            rightNeighbour[ind] = current[ind + 1]
 
-            positions.push([...newNumbers])
+            positions.push(rightNeighbour)
         }
 
         return positions
