@@ -19,7 +19,7 @@ class Board extends Component {
 
     componentDidMount () {
         // const start = this.shuffle(this.state.numbers) // uncomment this line and comment line below, if you want to use starting position randomly
-        const start = _.sample(startingPositions) // take starting position from predefined positions
+        const start = _.sample(startingPositions) // select starting position from predefined positions
         const goal = [1, 2, 3, 4, 5, 6, 7, 8, 0]
 
         this.setState({
@@ -111,7 +111,7 @@ class Board extends Component {
                     continue
                 }
 
-                const tentativeGscore = gScores[current] + 1 // dist between current and neighbor is one
+                const tentativeGscore = gScores[current] + 1 // distance between current and neighbor position is equal to 1
 
                 if (!this.isInSet(openSet, neighbor)) {
                     openSet.push(neighbor)
