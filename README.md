@@ -3,7 +3,7 @@
 React web app which solves **8 Puzzle** problem using A* algorithm
 
 ## Visualization
-![alt text](http://kaxi1993.github.io/images/npm/8puzzle/puzzle.gif)
+![alt text](http://kaxi1993.github.io/images/projects/8puzzle/game.gif)
 
 ## Installation
 ```bash
