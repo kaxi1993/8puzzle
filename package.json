@@ -4,10 +4,10 @@
   "description": "8 Puzzle problem solver using A* algorithm",
   "private": true,
   "dependencies": {
-    "lodash": "^4.17.19",
+    "lodash": "^4.17.20",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
-    "react-scripts": "^3.4.1"
+    "react-scripts": "^3.4.3"
   },
   "scripts": {
     "start": "react-scripts start",
